@@ -1,8 +1,12 @@
 <template name="PublicLayout">
-    <header>
-      {{> Template.dynamic template=header}}
-    </header>
-    <main>
-      {{> Template.dynamic template=main}}
-    </main>
+  <div id="home_page">
+    <div id="wrapper">
+      <header id="header" role="banner">
+        {{> Template.dynamic template=header}}
+      </header>
+      <main id="main" role="main">
+        {{> Template.dynamic template=main}}
+      </main>
+    </div>
+  </div>
 </template>

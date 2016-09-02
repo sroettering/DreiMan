@@ -1,0 +1,12 @@
+<template name="overrideAtTextInput">
+  <div class="at-input fieldwrap {{#if isValidating}}validating{{/if}} {{#if hasError}}has-error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}">
+    <label for="at-field-{{_id}}" class="input-icon {{_id}}"></label>
+    <input type="{{type}}" id="at-field-{{_id}}" class="input" name="at-field-{{_id}}" placeholder="{{placeholder}}" autocapitalize="none" autocorrect="off">
+    {{#if hasIcon}}
+        <span class="{{iconClass}}"></span>
+    {{/if}}
+    {{#if hasError}}
+      <span>{{errorText}}</span>
+    {{/if}}
+  </div>
+</template>

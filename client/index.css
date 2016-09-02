@@ -1,0 +1,22 @@
+* {
+	box-sizing: border-box;
+	font-family: "Lato", sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #0b8793;
+	background: -webkit-linear-gradient(top,  #0b8793 0%,#360033 100%);
+	background:         linear-gradient(to bottom,  #0b8793 0%,#360033 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0b8793', endColorstr='#360033',GradientType=0 );
+	height: 100%;
+}
+
+#wrapper {
+	margin: 0 auto;
+	max-width: 320px;
+	min-height: 100vh;
+	position: relative;
+	width: 100%;
+}
