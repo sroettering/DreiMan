@@ -1,3 +1,13 @@
 <template name="Lobby">
-  <h1>Lobby</h1>
+  <h3>Laufende Spiele:</h3>
+  {{#each activeRooms}}
+    <div class="activeRoom">
+      <span>{{admin}}</span> - <span>{{createdAt}}</span>
+    </div>
+  {{/each}}
+  <button id="createRoom" class="button">Neues Spiel</button>
+  <br />
+  <input type="text" class="input" id="invitee-name" placeholder="Gib einen Spielernamen ein">
+  <br />
+  <button id="inviteToGame" class="button">Einladen</button>
 </template>
