@@ -13,6 +13,7 @@
   <br />
   <h3>Einladungen:</h3>
   {{#each openInvitations}}
+    <a class="acceptRoomInvitation" href="#">{{roomName}} - {{senderName}}</a>
   {{else}}
     <p class="no-data-msg">Keine? Mit dir will wohl keiner saufen?!</p>
   {{/each}}

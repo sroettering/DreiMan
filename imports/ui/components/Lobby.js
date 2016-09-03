@@ -10,8 +10,25 @@ import { Invitations } from '/imports/api/invitations.js';
 
 Template.Lobby.helpers({
   activeRooms: function() {
+    //query for all rooms, where the current user is participating
     const rooms = Rooms.find({"players.userId": Meteor.userId()});
     return rooms;
+  },
+  openInvitations: function() {
+    const invitations = Invitations.find({invitee: Meteor.userId()});
+    return invitations;
+  },
+  roomName: function() {
+    const room = Rooms.findOne({_id: this.room});
+    if(room) {
+      return room.name;
+    }
+  },
+  senderName: function() {
+    const sender = Meteor.users.findOne({_id: this.sender});
+    if(sender) {
+      return sender.username ? sender.username : sender.profile.name;
+    }
   },
   date: function() {
     const date = moment(this.createdAt).format("D.M.YY - HH:mm");
@@ -33,15 +50,8 @@ Template.Lobby.events({
       });
     }
   },
-  'click #inviteToGame': function(event, template) {
-    const inviteeName = template.find('#invitee-name').value;
-    Invitations.insert({
-      invitee: Meteor.users.findOne({$or: [{username: inviteeName}, {"profile.name": inviteeName}] })._id,
-      sender: Meteor.userId(),
-      type: 'game',
-      room: Rooms.findOne({admin: Meteor.userId()})._id,
-    }, function(error, result) {
-      if(error) console.log(error);
-    });
+  'click .acceptRoomInvitation': function(event, template) {
+    event.preventDefault();
+    Meteor.call('acceptRoomInvitation', this._id);
   },
 });
