@@ -1,13 +1,19 @@
 <template name="Lobby">
-  <h3>Laufende Spiele:</h3>
+  <button id="createRoom" class="button">Saufrunde erstellen</button>
+  <input type="text" class="input" id="room-name" maxlength="15" placeholder="Gib der Runde einen Namen">
+  <br />
+  <h3>Laufende Runden:</h3>
   {{#each activeRooms}}
     <div class="activeRoom">
-      <span>{{admin}}</span> - <span>{{createdAt}}</span>
+      <a href="/room/{{_id}}">{{name}} ({{date}})</a>
     </div>
+  {{else}}
+    <p class="no-data-msg">Keine? Wird mal wieder Zeit!</p>
   {{/each}}
-  <button id="createRoom" class="button">Neues Spiel</button>
   <br />
-  <input type="text" class="input" id="invitee-name" placeholder="Gib einen Spielernamen ein">
-  <br />
-  <button id="inviteToGame" class="button">Einladen</button>
+  <h3>Einladungen:</h3>
+  {{#each openInvitations}}
+  {{else}}
+    <p class="no-data-msg">Keine? Mit dir will wohl keiner saufen?!</p>
+  {{/each}}
 </template>

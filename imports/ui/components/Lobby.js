@@ -3,6 +3,7 @@ import './Lobby.css';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { moment } from 'meteor/momentjs:moment';
 
 import { Rooms } from '/imports/api/rooms.js';
 import { Invitations } from '/imports/api/invitations.js';
@@ -12,26 +13,28 @@ Template.Lobby.helpers({
     const rooms = Rooms.find({"players.userId": Meteor.userId()});
     return rooms;
   },
+  date: function() {
+    const date = moment(this.createdAt).format("D.M.YY - HH:mm");
+    return date;
+  },
 });
 
 Template.Lobby.events({
-  'click #createRoom': function() {
+  'click #createRoom': function(event, template) {
+    event.preventDefault();
+    const roomName = template.find('#room-name').value;
+    template.find('#room-name').value = "";
     console.log(Meteor.userId());
-    Rooms.insert({
-      admin: Meteor.userId(),
-      players: [{
-        userId: Meteor.userId(),
-        gulps: 0,
-        isDreiman: false,
-      }],
-    }, function(error, result) {
-      if(error) console.log(error);
-    });
+    console.log(roomName);
+    if(roomName !== "") {
+      Meteor.call('createRoom', roomName, function(error, result) {
+        if(error) console.log(error);
+        else FlowRouter.go('/room/'+result);
+      });
+    }
   },
   'click #inviteToGame': function(event, template) {
-    console.log('inviting a friend');
     const inviteeName = template.find('#invitee-name').value;
-    console.log('inviting a drinking buddy');
     Invitations.insert({
       invitee: Meteor.users.findOne({$or: [{username: inviteeName}, {"profile.name": inviteeName}] })._id,
       sender: Meteor.userId(),

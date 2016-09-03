@@ -1,4 +1,5 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { moment } from 'meteor/momentjs:moment';
 
 const PlayerSchema = new SimpleSchema({
   userId: {
@@ -14,19 +15,26 @@ const PlayerSchema = new SimpleSchema({
 });
 
 export const RoomsSchema = new SimpleSchema({
+  name: {
+    type: String,
+    max: 20,
+  },
   admin: {
     type: String,
   },
   players: {
     type: [PlayerSchema],
+    minCount: 1,
+    maxCount: 10,
   },
   createdAt: {
     type: Date,
+    optional: true,
     autoValue: function() {
       if(this.isInsert) {
-        return new Date;
+        return moment().toDate();
       } else if (this.isUpsert) {
-        return {$setOnInsert: new Date};
+        return {$setOnInsert: moment().toDate()};
       } else {
         this.unset();  // Prevent user from supplying their own value
       }
@@ -34,6 +42,7 @@ export const RoomsSchema = new SimpleSchema({
   },
   isActive: {
     type: Boolean,
+    optional: true,
     autoValue: function() {
       if(this.isInsert) {
         return true;

@@ -5,6 +5,7 @@ import '/imports/ui/layouts/PublicLayout.js';
 import '/imports/ui/components/Header.js';
 import '/imports/ui/components/Login.js';
 import '/imports/ui/components/Lobby.js';
+import '/imports/ui/components/Room.js';
 
 FlowRouter.triggers.enter([function() {
   if(!Meteor.userId()) {
