@@ -36,7 +36,7 @@ Template.Lobby.helpers({
       const adminId = room.admin;
       const admin = Meteor.users.findOne({_id: adminId});
       if(admin) {
-        const adminName = admin.username ? admin.username : admin.profile.name;
+        const adminName = admin.username;
         return adminName;
       }
     }
@@ -52,7 +52,7 @@ Template.Lobby.helpers({
     const id = this.userId;
     const user = Meteor.users.findOne({_id: id});
     if(user) {
-      const name = user.username ? user.username : user.profile.name;
+      const name = user.username;
       return name;
     }
   },
@@ -66,7 +66,7 @@ Template.Lobby.helpers({
   },
   inviteeName: function() {
     const user = Meteor.users.findOne({_id: this.invitee});
-    if(user) return user.username ? user.username : user.profile.name;
+    if(user) return user.username;
   },
 });
 

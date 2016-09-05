@@ -1,5 +1,26 @@
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Meteor } from 'meteor/meteor';
+
+if(Meteor.isServer){
+  Meteor.users.before.insert(function(userId, doc) {
+    if(!doc.username) {
+      doc.username = "";
+    }
+    if(!doc.username && doc.profile && doc.services) {
+      let username = doc.profile.name;
+      if(doc.services.facebook) {
+        username = doc.services.facebook.email;
+      } else if(doc.services.google) {
+        username = doc.services.google.email;
+      } else if(doc.services.twitter) {
+        username = doc.services.twitter.screenName;
+      }
+      console.log(username);
+      doc.username = username;
+    }
+  });
+}
 
 AccountsTemplates.configure({
   showForgotPasswordLink: true,
@@ -10,7 +31,7 @@ AccountsTemplates.configure({
     FlowRouter.go('home');
   },
   onSubmitHook: function() {
-    FlowRouter.go('lobby');
+    FlowRouter.go('overview');
   },
   texts: {
     pwdLink_link: "Du hast dein Passwort vergessen?",

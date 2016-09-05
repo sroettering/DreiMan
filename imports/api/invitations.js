@@ -77,6 +77,8 @@ Meteor.methods({
   },
 });
 
-Rooms.after.remove(function (userId, doc) {
-  Invitations.remove({room: doc._id});
-});
+if(Meteor.isServer) {
+  Rooms.after.remove(function (userId, doc) {
+    Invitations.remove({room: doc._id});
+  });
+}

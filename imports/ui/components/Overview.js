@@ -27,7 +27,7 @@ Template.Overview.helpers({
   senderName: function() {
     const sender = Meteor.users.findOne({_id: this.sender});
     if(sender) {
-      return sender.username ? sender.username : sender.profile.name;
+      return sender.username;
     }
   },
   date: function() {
