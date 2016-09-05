@@ -1,20 +1,50 @@
 <template name="Lobby">
-  <button id="createRoom" class="button">Saufrunde erstellen</button>
-  <input type="text" class="input" id="room-name" maxlength="15" placeholder="Gib der Runde einen Namen">
-  <br />
-  <h3>Laufende Runden:</h3>
-  {{#each activeRooms}}
-    <div class="activeRoom">
-      <a href="/room/{{_id}}">{{name}} ({{date}})</a>
+  <h3>{{room.name}} ({{adminName}})</h3>
+  {{#unless hasStarted}}
+    {{#if isAdmin}}
+    <div id="headline">
+      Durstige finden
     </div>
+    <input type="text" name="invitee-name" class="input" id="invitee-name" value="" placeholder="Email, Benutzername, etc.">
+    <br>
+    <button id="inviteButton" class="button">Einladen</button>
+    <br>
+    {{/if}}
+    <div id="headline">
+      Einladungen:
+    </div>
+    <ul class="invitees-list">
+      {{#each invitations}}
+        <li class="invitation-item">
+          <span>{{inviteeName}}</span>
+          <a href="#" class="clickable-list-item-icon cancelRoomInvitation"><i class="fa fa-times red"></i></a>
+        </li>
+      {{else}}
+        <li class="no-player-item">
+          <p class="no-data-msg">Keine? Hat denn niemand Durst?</p>
+        </li>
+      {{/each}}
+    </ul>
+    <br>
+    <div id="headline">
+      Mitsäufer:
+    </div>
+    <ul class="players-list">
+      {{#each otherPlayers}}
+        <li class="player-item">
+          <p>{{userName}}</p>
+        </li>
+      {{else}}
+        <li class="no-player-item">
+          <p class="no-data-msg">Keine? Hat denn niemand Durst?</p>
+        </li>
+      {{/each}}
+    </ul>
+    <br>
+    {{#if isAdmin}}
+      <button id="startButton" class="button">Durst löschen!</button>
+    {{/if}}
   {{else}}
-    <p class="no-data-msg">Keine? Wird mal wieder Zeit!</p>
-  {{/each}}
-  <br />
-  <h3>Einladungen:</h3>
-  {{#each openInvitations}}
-    <a class="acceptRoomInvitation" href="#">{{roomName}} - {{senderName}}</a>
-  {{else}}
-    <p class="no-data-msg">Keine? Mit dir will wohl keiner saufen?!</p>
-  {{/each}}
+
+  {{/unless}}
 </template>

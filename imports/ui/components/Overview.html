@@ -1,0 +1,37 @@
+<template name="Overview">
+  <button id="createRoom" class="button">Saufrunde erstellen</button>
+  <input type="text" class="input" id="room-name" maxlength="15" placeholder="Gib der Runde einen Namen">
+  <br />
+  <div id="headline">
+    Saufrunden:
+  </div>
+  <ul class="active-rooms-list">
+    {{#each activeRooms}}
+      <li class="room-item">
+        <a href="/room/{{_id}}" class="room-link">{{name}} ({{date}})</a>
+        <a href="#" class="clickable-list-item-icon leaveRoom"><i class="fa fa-times red"></i></a>
+      </li>
+    {{else}}
+      <li class="no-room-item">
+        <p class="no-data-msg">Keine? Wird mal wieder Zeit!</p>
+      </li>
+    {{/each}}
+  </ul>
+  <br />
+  <div id="headline">
+    Einladungen:
+  </div>
+  <ul class="open-invitations-list">
+    {{#each openInvitations}}
+      <li class="invitation-item">
+        <span>{{roomName}} - {{senderName}}</span>
+        <a href="#" class="clickable-list-item-icon declineRoomInvitation"><i class="fa fa-times red"></i></a>
+        <a href="#" class="clickable-list-item-icon acceptRoomInvitation"><i class="fa fa-check green"></i></a>
+      </li>
+    {{else}}
+      <li class="no-invitation-item">
+        <p class="no-data-msg">Keine? Will wohl keiner saufen?!</p>
+      </li>
+    {{/each}}
+  </ul>
+</template>

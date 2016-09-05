@@ -1,0 +1,39 @@
+h3 {
+  color: #ffffff;
+}
+
+li {
+  list-style: none;
+}
+
+li.room-item, li.invitation-item, li.player-item {
+  position: relative;
+  list-style: none;
+  background-color: #fff;
+  line-height: 40px;
+  text-align: left;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  padding-left: 10px;
+}
+
+a.room-link {
+  color: #000;
+}
+
+a.clickable-list-item-icon {
+  float: right;
+  margin-right: 5px;
+}
+
+i.red {
+  color: #f00;
+}
+
+i.green {
+  color: #0f0;
+}
+
+p.no-data-msg {
+  color: #aaa;
+}

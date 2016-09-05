@@ -54,5 +54,29 @@ Meteor.methods({
     //only updates, if room is present. addToSet only adds the player if array did not contain it before.
     Rooms.update({_id: invitation.room}, {$addToSet: {players: player }});
     Invitations.remove({_id: invitationId});
-  }
+  },
+  'declineRoomInvitation'(invitationId) {
+    check(invitationId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! You are not logged in');
+
+    const invitation = Invitations.findOne({_id: invitationId});
+    if(!invitation) return;
+    if(invitation.invitee !== this.userId) return;
+
+    Invitations.remove({_id: invitationId});
+  },
+  'cancelRoomInvitation'(invitationId) {
+    check(invitationId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! You are not logged in');
+
+    const invitation = Invitations.findOne({_id: invitationId});
+    if(!invitation) return;
+    if(invitation.sender !== this.userId) return;
+
+    Invitations.remove({_id: invitationId});
+  },
+});
+
+Rooms.after.remove(function (userId, doc) {
+  Invitations.remove({room: doc._id});
 });

@@ -13,10 +13,13 @@ Rooms.attachSchema(RoomsSchema);
 Meteor.methods({
   'createRoom'(name) {
     check(name, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
 
-    if(!this.userId) throw new Meteor.Error('Sorry! You are not logged in');
+    // a user can only be admin of one room at a time
+    let room = Rooms.findOne({admin: this.userId});
+    if(room) return;
 
-    const room = {
+    room = {
       name: name,
       admin: this.userId,
       players: [{
@@ -34,5 +37,14 @@ Meteor.methods({
     });
 
     return id;
+  },
+  'leaveRoom'(roomId) {
+    check(roomId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    const room = Rooms.findOne({_id: roomId, "players.userId": this.userId});
+    if(!room) return;
+
+    Rooms.update({_id: roomId}, {$pull: {"players": {userId: this.userId}}});
   },
 });
