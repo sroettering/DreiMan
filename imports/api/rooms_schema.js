@@ -19,6 +19,9 @@ export const RoomsSchema = new SimpleSchema({
     type: String,
     max: 20,
   },
+  password: {
+    type: String,
+  },
   admin: {
     type: String,
   },

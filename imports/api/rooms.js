@@ -11,8 +11,9 @@ Rooms.attachSchema(RoomsSchema);
 // TODO publish stuff
 
 Meteor.methods({
-  'createRoom'(name) {
+  'createRoom'(name, passwordHash) {
     check(name, String);
+    check(passwordHash, String);
     if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
 
     // a user can only be admin of one room at a time
@@ -21,6 +22,7 @@ Meteor.methods({
 
     room = {
       name: name,
+      password: passwordHash,
       admin: this.userId,
       players: [{
         userId: this.userId,

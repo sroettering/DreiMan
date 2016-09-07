@@ -4,6 +4,7 @@ import './Overview.css';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { moment } from 'meteor/momentjs:moment';
+import { CryptoJS } from 'meteor/jparker:crypto-sha256';
 
 import { Rooms } from '/imports/api/rooms.js';
 import { Invitations } from '/imports/api/invitations.js';
@@ -40,9 +41,12 @@ Template.Overview.events({
   'click #createRoom': function(event, template) {
     event.preventDefault();
     const roomName = template.find('#room-name').value;
+    const roomPassword = template.find('#room-password').value;
     template.find('#room-name').value = "";
-    if(roomName !== "") {
-      Meteor.call('createRoom', roomName, function(error, result) {
+    template.find('#room-password').value = "";
+    if(roomName !== "" && roomPassword !== "") {
+      const encryptedPassword = CryptoJS.SHA256(roomPassword).toString();
+      Meteor.call('createRoom', roomName, encryptedPassword, function(error, result) {
         if(error) console.log(error);
         else if(result) FlowRouter.go('/room/'+result);
         else console.log('Sorry, du bist bereits Admin einer Saufrunde.');
