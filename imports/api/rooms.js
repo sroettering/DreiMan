@@ -46,7 +46,10 @@ Meteor.methods({
 
     const room = Rooms.findOne({_id: roomId, "players.userId": this.userId});
     if(!room) return;
-
-    Rooms.update({_id: roomId}, {$pull: {"players": {userId: this.userId}}});
+    if(room.admin === this.userId) {
+      Rooms.remove({_id: roomId});
+    } else {
+      Rooms.update({_id: roomId}, {$pull: {"players": {userId: this.userId}}});
+    }
   },
 });
