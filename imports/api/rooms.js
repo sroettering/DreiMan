@@ -10,6 +10,10 @@ Rooms.attachSchema(RoomsSchema);
 
 // TODO publish stuff
 
+if(Meteor.isServer){
+  Rooms._ensureIndex({name: 1});
+}
+
 Meteor.methods({
   'createRoom'(name, passwordHash) {
     check(name, String);

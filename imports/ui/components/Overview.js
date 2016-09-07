@@ -4,7 +4,7 @@ import './Overview.css';
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { moment } from 'meteor/momentjs:moment';
-import { CryptoJS } from 'meteor/jparker:crypto-sha256';
+import { CryptoJS } from 'meteor/jparker:crypto-core';
 
 import { Rooms } from '/imports/api/rooms.js';
 import { Invitations } from '/imports/api/invitations.js';

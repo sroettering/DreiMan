@@ -4,7 +4,29 @@
   <input type="text" class="input" id="room-password" maxlength="10" placeholder="Passwort festlegen">
   <br />
   <div id="headline">
-    Saufrunden:
+    Saufrunden suchen:
+  </div>
+  <input type="text" class="input" id="room-search-name" value="test" maxlength="15" placeholder="Saufrunde suchen">
+  <ul class="search-result-list">
+    {{#if searching}}
+      <p>
+        Searching...
+      </p>
+    {{else}}
+      {{#each roomSearchResult}}
+        <li class="room-item">
+          <a href="#" class="room-link">{{name}} ({{date}})</a>
+        </li>
+      {{else}}
+        <li class="no-room-item">
+          <p class="no-data-msg">Keine gefunden. Erstell doch einfach eine?!</p>
+        </li>
+      {{/each}}
+    {{/if}}
+  </ul>
+  <br />
+  <div id="headline">
+    Deine Saufrunden:
   </div>
   <ul class="active-rooms-list">
     {{#each activeRooms}}
