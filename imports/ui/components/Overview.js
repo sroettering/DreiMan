@@ -1,13 +1,29 @@
 import './Overview.html';
 import './Overview.css';
 
+import './RoomSearch.js';
+
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { moment } from 'meteor/momentjs:moment';
 import { CryptoJS } from 'meteor/jparker:crypto-core';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Rooms } from '/imports/api/rooms.js';
 import { Invitations } from '/imports/api/invitations.js';
+import { ReactiveVar } from 'meteor/reactive-var';
+
+Template.Overview.onCreated( () => {
+  let template = Template.instance();
+
+  template.autorun( () => {
+    // subscribe to my invitations
+    template.subscribe('myInvitations');
+
+    // subscribe to my rooms
+    template.subscribe('rooms');
+  });
+});
 
 Template.Overview.helpers({
   activeRooms: function() {
@@ -46,11 +62,16 @@ Template.Overview.events({
     template.find('#room-password').value = "";
     if(roomName !== "" && roomPassword !== "") {
       const encryptedPassword = CryptoJS.SHA256(roomPassword).toString();
-      Meteor.call('createRoom', roomName, encryptedPassword, function(error, result) {
-        if(error) console.log(error);
-        else if(result) FlowRouter.go('/room/'+result);
-        else console.log('Sorry, du bist bereits Admin einer Saufrunde.');
-      });
+      const id = Meteor.apply(
+          'createRoom',
+          [roomName, encryptedPassword],
+          {returnStubValue: true}
+      );
+      if(id) {
+        Meteor.defer(function() {
+            FlowRouter.go('/room/'+id);
+        });
+      }
     }
   },
   'click .leaveRoom': function(event, template) {

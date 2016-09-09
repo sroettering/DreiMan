@@ -13,8 +13,19 @@ TODO:
 - allow only invited users into the lobby (maybe with template level subscriptions)
 */
 
+Template.Lobby.onCreated( () => {
+  let template = Template.instance();
+
+  template.autorun( () => {
+    // subscribe to my rooms
+    template.subscribe('current-room', FlowRouter.getParam('id'));
+  });
+});
+
 Template.Lobby.helpers({
   room: function() {
+    console.log(Template.instance().subscriptionsReady());
+    console.log(Rooms.find().count());
     const id = FlowRouter.getParam('id');
     return Rooms.findOne({_id: id});
   },
@@ -74,15 +85,8 @@ Template.Lobby.events({
   'click #inviteButton': function(event, template) {
     event.preventDefault();
     const invitee = template.find('#invitee-name').value;
-    const user = Meteor.users.findOne({$or: [{"profile.name": invitee},
-                                             {"services.facebook.email": invitee},
-                                             {"services.twitter.screenName": invitee},
-                                             {"services.google.name": invitee},
-                                             {username: invitee}] });
     template.find('#invitee-name').value = "";
-    if(user) {
-      Meteor.call('sendRoomInvitation', user._id);
-    }
+    Meteor.call('sendRoomInvitation', invitee);
   },
   'click .cancelRoomInvitation': function(event, template) {
     event.preventDefault();

@@ -1,0 +1,23 @@
+<template name="RoomSearch">
+  <div id="headline">
+    Saufrunden suchen:
+  </div>
+  <input type="text" class="input" id="room-search-name" maxlength="15" placeholder="Saufrunde suchen">
+  <ul class="search-result-list">
+    {{#if searching}}
+      <p>
+        Searching...
+      </p>
+    {{else}}
+      {{#each roomSearchResults}}
+        <li class="room-item">
+          <a href="#" class="room-link">{{name}} ({{adminName}})</a>
+        </li>
+      {{else}}
+        <li class="no-room-item">
+          <p class="no-data-msg">Keine gefunden. Erstell doch einfach eine?!</p>
+        </li>
+      {{/each}}
+    {{/if}}
+  </ul>
+</template>

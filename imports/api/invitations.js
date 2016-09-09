@@ -10,22 +10,41 @@ export const Invitations = new Mongo.Collection('invitations');
 
 Invitations.attachSchema(InvitationsSchema);
 
+if(Meteor.isServer) {
+  // Collection Hook: After room deletion, every associated invitation is removed too.
+  Rooms.after.remove(function (userId, doc) {
+    Invitations.remove({room: doc._id});
+  });
+
+  // publish all user related invitations
+  Meteor.publish('myInvitations', function() {
+    return Invitations.find({invitee: this.userId});
+  });
+}
+
 Meteor.methods({
-  'sendRoomInvitation'(inviteeId) {
-    check(inviteeId, String);
+  'sendRoomInvitation'(invitee) {
+    check(invitee, String);
     if(!this.userId) throw new Meteor.Error('Sorry! You are not logged in');
 
-    let room = Rooms.findOne({admin: this.userId, "players.userId": inviteeId});
+    const user = Meteor.users.findOne({$or: [{"profile.name": invitee},
+                                             {"services.facebook.email": invitee},
+                                             {"services.twitter.screenName": invitee},
+                                             {"services.google.name": invitee},
+                                             {username: invitee}] });
+    if(!user) return;
+
+    let room = Rooms.findOne({admin: this.userId, "players.userId": user._id});
     if(room) return;
 
     room = Rooms.findOne({admin: this.userId});
     if(!room) return;
 
-    let invitation = Invitations.findOne({invitee: inviteeId, room: room._id});
+    let invitation = Invitations.findOne({invitee: user._id, room: room._id});
     if(invitation) return;
 
     invitation = {
-      invitee: inviteeId,
+      invitee: user._id,
       sender: this.userId,
       type: 'game',
       room: room._id,
@@ -76,9 +95,3 @@ Meteor.methods({
     Invitations.remove({_id: invitationId});
   },
 });
-
-if(Meteor.isServer) {
-  Rooms.after.remove(function (userId, doc) {
-    Invitations.remove({room: doc._id});
-  });
-}

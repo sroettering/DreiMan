@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import { RoomsSchema } from './rooms_schema.js';
+//import { Inviations } from './invitations.js';
 
 export const Rooms = new Mongo.Collection('rooms');
 
@@ -11,7 +12,38 @@ Rooms.attachSchema(RoomsSchema);
 // TODO publish stuff
 
 if(Meteor.isServer){
+  // create an index for room names
   Rooms._ensureIndex({name: 1});
+
+  Meteor.publish('current-room', function(roomId) {
+    check(roomId, String);
+
+    return Rooms.find({_id: roomId}, {fields: {password: 0}});
+  });
+
+  // publish all user related rooms
+  Meteor.publish('my-rooms', function() {
+    return Rooms.find({"players.userId": this.userId}, {fields: {password: 0}});
+  });
+
+  Meteor.publish('rooms', function() {
+    return Rooms.find({}, {fields: {password: 0}});
+  });
+
+  // publish rooms where the name matches a search query
+  Meteor.publish('rooms-search', function(searchQuery) {
+    check(searchQuery, Match.OneOf(String, null, undefined));
+
+    const projection = {fields: {password: 0}, sort: {createdAt: 1, name: 1}};
+
+    if(searchQuery) {
+      const regex = new RegExp(searchQuery, 'i');
+      const query = {name: regex, "players.userId": {$ne: this.userId}};
+
+      return Rooms.find(query, projection);
+    }
+  });
+
 }
 
 Meteor.methods({
