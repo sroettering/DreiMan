@@ -26,7 +26,7 @@ Template.RoomSearch.onCreated( () => {
     });
   });
 
-  template.resetCurrentRoom = function() {
+  template.closeRoomEntryModal = function() {
     template.currentRoom.set(null);
   }
 });
@@ -76,7 +76,7 @@ Template.RoomSearch.events({
   },
   'click .modal': function(event, template) {
     if(template.currentRoom.get() && event.target.getAttribute('class') === 'modal') {
-      template.resetCurrentRoom();
+      template.closeRoomEntryModal();
     }
   },
   'click .room-item-clickable': function(event, template) {
@@ -84,7 +84,7 @@ Template.RoomSearch.events({
   },
   'keyup': function(event, template) {
     if(event.keyCode === 27) { // 27 === Escape
-      template.resetCurrentRoom();
+      template.closeRoomEntryModal();
     }
   },
 });

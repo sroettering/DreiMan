@@ -34,6 +34,10 @@ i.green {
   color: #0f0;
 }
 
+i.white {
+  color: #fff;
+}
+
 p.no-data-msg {
   color: #aaa;
 }

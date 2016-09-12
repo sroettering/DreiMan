@@ -1,9 +1,9 @@
 <template name="RoomEntryModal">
   <div class="modal">
     <div class="modal-content">
-      <h3>Saufrunde beitreten</h3>
-      <p>Saufrunde: {{room.name}}</p>
-      <p>Admin: {{adminName room.admin}}</p>
+      <a href="#" class="close-button" id="close-modal"><i class="fa fa-close white"></i></a>
+      <h3>{{room.name}} beitreten</h3>
+      <p>({{adminName room.admin}})</p>
       <div class="field-wrap">
         <input type="password" class="input" id="room-entry-password" placeholder="Passwort">
       </div>
