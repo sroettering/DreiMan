@@ -88,4 +88,31 @@ Meteor.methods({
       Rooms.update({_id: roomId}, {$pull: {"players": {userId: this.userId}}});
     }
   },
+  'enterRoomWithPwd'(roomId, passwordHash) {
+    check(roomId, String);
+    check(passwordHash, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    const room = Rooms.findOne({_id: roomId});
+    if(!room) return;
+
+    // check if password is correct
+    if(room.password !== passwordHash) return;
+
+    // update player array in room
+    const player = {
+      userId: this.userId,
+      gulps: 0,
+      isDreiman: false,
+    }
+
+    //only updates, if room is present. addToSet only adds the player if array did not contain it before.
+    Rooms.update({_id: roomId}, {$addToSet: {players: player }});
+
+    // check for pending invitation for this room and this user and delete it
+    //Meteor.call('removeInvitationFor', roomId, this.userId);
+    console.log(roomId);
+    // return the roomId
+    return roomId;
+  },
 });

@@ -1,7 +1,10 @@
 <template name="Overview">
-  <button id="createRoom" class="button">Saufrunde erstellen</button>
+  <div id="headline">
+    Saufrunde erstellen:
+  </div>
   <input type="text" class="input" id="room-name" maxlength="15" placeholder="Name der Saufrunde">
   <input type="text" class="input" id="room-password" maxlength="10" placeholder="Passwort festlegen">
+  <button id="createRoom" class="button">Los gehts!</button>
   <br />
   {{> RoomSearch}}
   <br />

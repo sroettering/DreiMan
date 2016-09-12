@@ -10,8 +10,8 @@
       </p>
     {{else}}
       {{#each roomSearchResults}}
-        <li class="room-item">
-          <a href="#" class="room-link">{{name}} ({{adminName}})</a>
+        <li class="room-item room-item-clickable">
+          <span name="roomLabel">{{name}} ({{adminName}})</span>
         </li>
       {{else}}
         <li class="no-room-item">
@@ -20,4 +20,7 @@
       {{/each}}
     {{/if}}
   </ul>
+  {{#with currentRoom}}
+    {{>RoomEntryModal room=currentRoom}}
+  {{/with}}
 </template>

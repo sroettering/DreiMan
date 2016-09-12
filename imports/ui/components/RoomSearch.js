@@ -7,8 +7,12 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Rooms } from '/imports/api/rooms.js';
 
+import './RoomEntryModal.js';
+
 Template.RoomSearch.onCreated( () => {
   let template = Template.instance();
+
+  template.currentRoom = new ReactiveVar();
 
   template.searchQuery = new ReactiveVar();
   template.searching = new ReactiveVar(false);
@@ -21,6 +25,10 @@ Template.RoomSearch.onCreated( () => {
       }, 300);
     });
   });
+
+  template.resetCurrentRoom = function() {
+    template.currentRoom.set(null);
+  }
 });
 
 Template.RoomSearch.helpers({
@@ -44,10 +52,15 @@ Template.RoomSearch.helpers({
       return sender.username;
     }
   },
+  currentRoom: function() {
+    // on click add clicked room as reactiveVar and retrieve it
+    const template = Template.instance();
+    return template.currentRoom.get();
+  },
 });
 
 Template.RoomSearch.events({
-  'keyup #room-search-name':  function( event, template ) {
+  'keyup #room-search-name': function(event, template ) {
     let value = event.target.value.trim();
 
     if (value !== '') {// && event.keyCode === 13 ) { // 13 = Enter
@@ -57,8 +70,21 @@ Template.RoomSearch.events({
       }
     }
 
-    if ( value === '' ) {
+    if (value === '') {
       template.searchQuery.set( value );
+    }
+  },
+  'click .modal': function(event, template) {
+    if(template.currentRoom.get() && event.target.getAttribute('class') === 'modal') {
+      template.resetCurrentRoom();
+    }
+  },
+  'click .room-item-clickable': function(event, template) {
+    template.currentRoom.set(this);
+  },
+  'keyup': function(event, template) {
+    if(event.keyCode === 27) { // 27 === Escape
+      template.resetCurrentRoom();
     }
   },
 });

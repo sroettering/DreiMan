@@ -1,0 +1,15 @@
+<template name="RoomEntryModal">
+  <div class="modal">
+    <div class="modal-content">
+      <h3>Saufrunde beitreten</h3>
+      <p>Saufrunde: {{room.name}}</p>
+      <p>Admin: {{adminName room.admin}}</p>
+      <div class="field-wrap">
+        <input type="password" class="input" id="room-entry-password" placeholder="Passwort">
+      </div>
+      <div class="field-wrap">
+        <button id="enter-room-with-pwd" class="button">Lass mich rein!</button>
+      </div>
+    </div>
+  </div>
+</template>

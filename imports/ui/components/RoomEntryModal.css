@@ -1,0 +1,24 @@
+div.modal {
+  background-color: rgba(0, 0, 0, 0.6);
+  display: block;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+div.modal-content {
+  background: #360033;
+  margin: 20% auto;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  width: 320px;
+  padding: 10px 20px 10px 20px;
+}
+
+div.modal p {
+  color: #fff;
+  margin: 10px 20px 10px 20px;
+}

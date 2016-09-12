@@ -20,6 +20,15 @@ if(Meteor.isServer) {
   Meteor.publish('myInvitations', function() {
     return Invitations.find({invitee: this.userId});
   });
+
+  // publish all invitations related to a room
+  Meteor.publish('room-invitations', function(roomId) {
+    check(roomId, String);
+    if(!this.userId) return;
+
+    // roomId is not necessary here, because a user can only be admin of one room
+    return Invitations.find({type: 'game', sender: this.userId, room: roomId});
+  });
 }
 
 Meteor.methods({
@@ -93,5 +102,12 @@ Meteor.methods({
     if(invitation.sender !== this.userId) return;
 
     Invitations.remove({_id: invitationId});
+  },
+  'removeInvitationFor'(roomId, userId) {
+    check(roomId, String);
+    check(userId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    Invitations.remove({invitee: userId, room: roomId});
   },
 });

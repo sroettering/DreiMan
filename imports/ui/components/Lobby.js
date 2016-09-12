@@ -19,13 +19,14 @@ Template.Lobby.onCreated( () => {
   template.autorun( () => {
     // subscribe to my rooms
     template.subscribe('current-room', FlowRouter.getParam('id'));
+
+    // subscribe to my sent invitations
+    template.subscribe('room-invitations', FlowRouter.getParam('id'));
   });
 });
 
 Template.Lobby.helpers({
   room: function() {
-    console.log(Template.instance().subscriptionsReady());
-    console.log(Rooms.find().count());
     const id = FlowRouter.getParam('id');
     return Rooms.findOne({_id: id});
   },
