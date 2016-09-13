@@ -8,6 +8,10 @@ import { CryptoJS } from 'meteor/jparker:crypto-core';
 Template.RoomEntryModal.onCreated(function() {
   let template = Template.instance();
 
+  template.closeModal = function() {
+    Session.set('showRoomEntryModal', false);
+  };
+
   template.enterRoomWithPwd = function(roomId, password) {
     const encryptedPassword = CryptoJS.SHA256(password).toString();
 
@@ -20,6 +24,11 @@ Template.RoomEntryModal.onCreated(function() {
       }
     });
   };
+});
+
+Template.RoomEntryModal.onRendered(function() {
+  let template = Template.instance();
+  template.find('#room-entry-password').focus();
 });
 
 Template.RoomEntryModal.helpers({
@@ -44,6 +53,11 @@ Template.RoomEntryModal.events({
     template.enterRoomWithPwd(this.room._id, password);
   },
   'click #close-modal': function(event, template) {
-    
+    template.closeModal();
+  },
+  'click .modal': function(event, template) {
+    if($(event.target).hasClass('modal')) { // only close if clicked on the dark overlay
+      template.closeModal();
+    }
   },
 });

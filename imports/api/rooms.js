@@ -18,7 +18,7 @@ if(Meteor.isServer){
   Meteor.publish('current-room', function(roomId) {
     check(roomId, String);
 
-    return Rooms.find({_id: roomId}, {fields: {password: 0}});
+    return Rooms.find({_id: roomId, "players.userId": this.userId}, {fields: {password: 0}});
   });
 
   // publish all user related rooms
@@ -56,12 +56,15 @@ Meteor.methods({
     let room = Rooms.findOne({admin: this.userId});
     if(room) return;
 
+    const user = Meteor.users.findOne({_id: this.userId});
+
     room = {
       name: name,
       password: passwordHash,
       admin: this.userId,
       players: [{
         userId: this.userId,
+        username: user.username,
         gulps: 0,
         isDreiman: false,
       }],
@@ -100,8 +103,10 @@ Meteor.methods({
     if(room.password !== passwordHash) return;
 
     // update player array in room
+    const user = Meteor.users.findOne({_id: this.userId});
     const player = {
       userId: this.userId,
+      username: user.username,
       gulps: 0,
       isDreiman: false,
     }
@@ -110,9 +115,26 @@ Meteor.methods({
     Rooms.update({_id: roomId}, {$addToSet: {players: player }});
 
     // check for pending invitation for this room and this user and delete it
-    //Meteor.call('removeInvitationFor', roomId, this.userId);
-    console.log(roomId);
+    Meteor.call('removeInvitationForRoom', roomId);
+
     // return the roomId
     return roomId;
+  },
+  'addDummyPlayer'(playerName) {
+    check(playerName, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    const room = Rooms.findOne({admin: this.userId, "players.username": {$ne: playerName}});
+    if(!room) return;
+    if(room.players.length >= 10) return;
+
+    const player = {
+      //userId: 00000, // dummy players dont have a userid
+      username: playerName,
+      gulps: 0,
+      isDreiman: false,
+    };
+
+    Rooms.update({_id: room._id}, {$addToSet: {players: player }});
   },
 });

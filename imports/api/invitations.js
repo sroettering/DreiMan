@@ -48,6 +48,7 @@ Meteor.methods({
 
     room = Rooms.findOne({admin: this.userId});
     if(!room) return;
+    if(room.players.length >= 10) return;
 
     let invitation = Invitations.findOne({invitee: user._id, room: room._id});
     if(invitation) return;
@@ -73,8 +74,13 @@ Meteor.methods({
     if(!invitation) return;
     if(invitation.invitee !== this.userId) return;
 
+    const room = Rooms.findOne({_id: invitation.room});
+    if(room && room.players.length >= 10) return;
+
+    const user = Meteor.users.findOne({_id: invitation.invitee});
     const player = {
       userId: invitation.invitee,
+      username: user.username,
       gulps: 0,
       isDreiman: false,
     }
@@ -103,11 +109,10 @@ Meteor.methods({
 
     Invitations.remove({_id: invitationId});
   },
-  'removeInvitationFor'(roomId, userId) {
+  'removeInvitationForRoom'(roomId) {
     check(roomId, String);
-    check(userId, String);
     if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
 
-    Invitations.remove({invitee: userId, room: roomId});
+    Invitations.remove({invitee: this.userId, room: roomId});
   },
 });

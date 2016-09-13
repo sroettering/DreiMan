@@ -48,7 +48,7 @@ Template.Overview.helpers({
     }
   },
   date: function() {
-    const date = moment(this.createdAt).format("D.M.YY - HH:mm");
+    const date = moment(this.createdAt).format("D.M.YY"); // - HH:mm");
     return date;
   },
 });

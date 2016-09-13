@@ -10,6 +10,8 @@ import { Rooms } from '/imports/api/rooms.js';
 import './RoomEntryModal.js';
 
 Template.RoomSearch.onCreated( () => {
+  Session.set('showRoomEntryModal', false);
+
   let template = Template.instance();
 
   template.currentRoom = new ReactiveVar();
@@ -25,10 +27,6 @@ Template.RoomSearch.onCreated( () => {
       }, 300);
     });
   });
-
-  template.closeRoomEntryModal = function() {
-    template.currentRoom.set(null);
-  }
 });
 
 Template.RoomSearch.helpers({
@@ -74,17 +72,8 @@ Template.RoomSearch.events({
       template.searchQuery.set( value );
     }
   },
-  'click .modal': function(event, template) {
-    if(template.currentRoom.get() && event.target.getAttribute('class') === 'modal') {
-      template.closeRoomEntryModal();
-    }
-  },
   'click .room-item-clickable': function(event, template) {
     template.currentRoom.set(this);
-  },
-  'keyup': function(event, template) {
-    if(event.keyCode === 27) { // 27 === Escape
-      template.closeRoomEntryModal();
-    }
+    Session.set('showRoomEntryModal', true);
   },
 });

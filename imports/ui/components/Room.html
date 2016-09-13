@@ -1,0 +1,12 @@
+<template name="Room">
+  {{#if room}}
+    <h3>{{room.name}} ({{usernameForId room.admin}})</h3>
+    {{#unless hasStarted}}
+      {{> Lobby room=room}}
+    {{else}}
+      <!-- Gamescreen template -->
+    {{/unless}}
+  {{else}}
+    <h3>Hast du dich verlaufen?</h3>
+  {{/if}}
+</template>

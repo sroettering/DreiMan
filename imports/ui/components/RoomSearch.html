@@ -20,7 +20,7 @@
       {{/each}}
     {{/if}}
   </ul>
-  {{#with currentRoom}}
-    {{>RoomEntryModal room=currentRoom}}
-  {{/with}}
+  {{#if $.Session.get 'showRoomEntryModal'}}
+    {{> RoomEntryModal room=currentRoom}}
+  {{/if}}
 </template>

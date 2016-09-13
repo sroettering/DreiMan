@@ -4,6 +4,10 @@ import { moment } from 'meteor/momentjs:moment';
 const PlayerSchema = new SimpleSchema({
   userId: {
     type: String,
+    optional: true,
+  },
+  username: { // can be real or dummy player
+    type: String,
   },
   gulps: {
     type: Number,

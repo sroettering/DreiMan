@@ -26,59 +26,19 @@ Template.Lobby.onCreated( () => {
 });
 
 Template.Lobby.helpers({
-  room: function() {
-    const id = FlowRouter.getParam('id');
-    return Rooms.findOne({_id: id});
-  },
-  otherPlayers: function() {
-    const id = FlowRouter.getParam('id');
-    const room = Rooms.findOne({_id: id});
-    if(room) {
-      const players = room.players;
-      const otherPlayers = players.filter(function(elem) {
-        return elem.userId !== room.admin;
-      });
-      return otherPlayers;
-    }
-  },
-  adminName: function() {
-    const id = FlowRouter.getParam('id');
-    const room = Rooms.findOne({_id: id});
-    if(room) {
-      const adminId = room.admin;
-      const admin = Meteor.users.findOne({_id: adminId});
-      if(admin) {
-        const adminName = admin.username;
-        return adminName;
-      }
-    }
-  },
-  isAdmin: function() {
-    const id = FlowRouter.getParam('id');
-    const room = Rooms.findOne({_id: id});
-    if(room) {
-      return room.admin === Meteor.userId();
-    }
-  },
-  userName: function() {
-    const id = this.userId;
-    const user = Meteor.users.findOne({_id: id});
-    if(user) {
-      const name = user.username;
-      return name;
-    }
-  },
   invitations: function() {
     const id = Meteor.userId();
     const room = Rooms.findOne({admin: id});
     if(!room) return;
 
     const invitations = Invitations.find({type: 'game', room: room._id, sender:id});
-    return invitations;
+    return invitations.fetch();
   },
-  inviteeName: function() {
-    const user = Meteor.users.findOne({_id: this.invitee});
-    if(user) return user.username;
+  maximumReached: function() {
+    const players = this.room.players;
+    if(players) {
+      if(players.length >= 10) return {disabled: 'disabled'};
+    }
   },
 });
 
@@ -92,5 +52,12 @@ Template.Lobby.events({
   'click .cancelRoomInvitation': function(event, template) {
     event.preventDefault();
     Meteor.call('cancelRoomInvitation', this._id);
-  }
+  },
+  'click #add-dummy-player': function(event, template) {
+    const playerName = template.find('#dummy-name').value;
+    if(playerName && playerName !== "") {
+      Meteor.call('addDummyPlayer', playerName);
+      template.find('#dummy-name').value = "";
+    }
+  },
 });

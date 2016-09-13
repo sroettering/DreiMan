@@ -14,7 +14,14 @@
   <ul class="active-rooms-list">
     {{#each activeRooms}}
       <li class="room-item">
-        <a href="/room/{{_id}}" class="room-link">{{name}} ({{date}})</a>
+        <a href="/room/{{_id}}" class="room-link">
+          {{#if isAdmin _id currentUser}}
+            <i class="fa fa-star yellow"></i>
+          {{else}}
+            <i class="fa fa-fw"></i>
+          {{/if}}
+          {{name}} ({{date}})
+        </a>
         <a href="#" class="clickable-list-item-icon leaveRoom"><i class="fa fa-times red"></i></a>
       </li>
     {{else}}

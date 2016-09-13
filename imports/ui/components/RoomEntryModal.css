@@ -12,12 +12,16 @@ div.modal {
 div.modal-content {
   position: relative;
   background: #360033;
-  margin: 20% auto;
+  margin: 100px auto;
   border: 2px solid #fff;
   border-radius: 2px;
   width: 320px;
   padding: 10px 20px 10px 20px;
   text-align: center;
+}
+
+div.modal-content div.field-wrap {
+  margin-bottom: 10px;
 }
 
 div.modal {
