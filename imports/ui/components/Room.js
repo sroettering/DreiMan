@@ -1,6 +1,7 @@
 import './Room.html';
 import './Room.css';
 import './Lobby.js';
+import './Game.js';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';

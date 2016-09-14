@@ -1,0 +1,19 @@
+<template name="Game">
+  <div class="game-wrapper">
+    <div class="table">
+      {{#each $mapped room.players}}
+        <div class="player-wrapper" id="player-{{$index}}">
+          <div class="crown">
+            <p class="white-text">{{#if isDreiman}}Dreiman{{/if}}</p>
+          </div>
+          <div class="player-circle">
+            <p class="player-gulps white-text">{{gulps}}</p>
+          </div>
+          <div class="player-name">
+            <p class="white-text">{{username}}</p>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>
