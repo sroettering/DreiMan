@@ -155,14 +155,19 @@ Meteor.methods({
     let gamestate = room.gamestate;
 
     // if gamestate is other than dreiman-round or drinking-round no dice roll is allowed
-    if(!(gamestate.state === 'dreiman-round' || gamestate.state === 'drinking-round')) return;
+    if(gamestate.state !== 'dreiman-round' && gamestate.state !== 'drinking-round') return;
 
     let currentPlayer = gamestate.rolling; // TODO: check if player is allowed to roll
     let d1 = Math.floor(Math.random() * 6) + 1;
     let d2 = Math.floor(Math.random() * 6) + 1;
     gamestate.firstDie = d1;
     gamestate.secondDie = d2;
-    gamestate.rolling = ++currentPlayer % room.players.length;
+    const sum = d1 + d2;
+
+    // if no player has to drink, it's the next ones turn
+    if((sum === 6 || sum === 8 || sum === 10) && d1 !== 3 && d2 !== 3) {
+      gamestate.rolling = ++currentPlayer % room.players.length;
+    }
     console.log('You rolled a ' + d1 + ' and a ' + d2);
 
     Rooms.update({_id: roomId}, {$set: {gamestate: gamestate}});
