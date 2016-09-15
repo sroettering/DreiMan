@@ -21,7 +21,7 @@ Template.Overview.onCreated( () => {
     template.subscribe('myInvitations');
 
     // subscribe to my rooms
-    template.subscribe('rooms');
+    template.subscribe('my-rooms'); // why subscribe to all rooms????
   });
 });
 

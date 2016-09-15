@@ -26,10 +26,6 @@ if(Meteor.isServer){
     return Rooms.find({"players.userId": this.userId}, {fields: {password: 0}});
   });
 
-  Meteor.publish('rooms', function() {
-    return Rooms.find({}, {fields: {password: 0}});
-  });
-
   // publish rooms where the name matches a search query
   Meteor.publish('rooms-search', function(searchQuery) {
     check(searchQuery, Match.OneOf(String, null, undefined));
