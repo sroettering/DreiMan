@@ -23,14 +23,19 @@ if(Meteor.isServer){
 
   // publish all user related rooms
   Meteor.publish('my-rooms', function() {
-    return Rooms.find({"players.userId": this.userId}, {fields: {password: 0}});
+    return Rooms.find({"players.userId": this.userId}, {fields: {password: 0, gamestate: 0}});
+  });
+
+  // publish all rooms only with their name for display purposes
+  Meteor.publish('rooms', function() {
+    return Rooms.find({}, {fields: {name: 1, createdAt: 1}});
   });
 
   // publish rooms where the name matches a search query
   Meteor.publish('rooms-search', function(searchQuery) {
     check(searchQuery, Match.OneOf(String, null, undefined));
 
-    const projection = {fields: {password: 0}, sort: {createdAt: 1, name: 1}};
+    const projection = {fields: {password: 0, gamestate: 0}, sort: {createdAt: 1, name: 1}};
 
     if(searchQuery) {
       const regex = new RegExp(searchQuery, 'i');
@@ -133,5 +138,33 @@ Meteor.methods({
     };
 
     Rooms.update({_id: room._id}, {$addToSet: {players: player }});
+  },
+  'rollDice'(roomId) {
+    check(roomId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+    if(!Meteor.isServer) return;
+
+    const room = Rooms.findOne({_id: roomId,
+      $or: [
+        {"players.userId": this.userId}, // logged in user
+        {admin: this.userId} // dummy player
+      ]
+    });
+    if(!room) return;
+
+    let gamestate = room.gamestate;
+
+    // if gamestate is other than dreiman-round or drinking-round no dice roll is allowed
+    if(!(gamestate.state === 'dreiman-round' || gamestate.state === 'drinking-round')) return;
+
+    let currentPlayer = gamestate.rolling; // TODO: check if player is allowed to roll
+    let d1 = Math.floor(Math.random() * 6) + 1;
+    let d2 = Math.floor(Math.random() * 6) + 1;
+    gamestate.firstDie = d1;
+    gamestate.secondDie = d2;
+    gamestate.rolling = ++currentPlayer % room.players.length;
+    console.log('You rolled a ' + d1 + ' and a ' + d2);
+
+    Rooms.update({_id: roomId}, {$set: {gamestate: gamestate}});
   },
 });

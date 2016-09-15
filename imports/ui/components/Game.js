@@ -55,17 +55,18 @@ Template.Game.onRendered(function() {
 });
 
 Template.Game.helpers({
-
+  die1: function() {
+    const d1 = this.room.gamestate.firstDie;
+    return d1;
+  },
+  die2: function() {
+    const d2 = this.room.gamestate.secondDie;
+    return d2;
+  },
 });
 
 Template.Game.events({
   'click #roll-button': function(event, template) {
-    const d1 = Math.floor(Math.random() * 6) + 1;
-    const d2 = Math.floor(Math.random() * 6) + 1;
-    template.diceRoll.set({first: d1, second: d2});
-    let die1 = template.find('#die-1');
-    let die2 = template.find('#die-2');
-    die1.src = template.images[d1-1];
-    die2.src = template.images[d2-1];
+    Meteor.call('rollDice', this.room._id);
   },
 });

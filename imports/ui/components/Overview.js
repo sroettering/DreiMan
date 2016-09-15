@@ -20,6 +20,9 @@ Template.Overview.onCreated( () => {
     // subscribe to my invitations
     template.subscribe('myInvitations');
 
+    // subscribe to all rooms with their names published only
+    template.subscribe('rooms');
+
     // subscribe to my rooms
     template.subscribe('my-rooms'); // why subscribe to all rooms????
   });
