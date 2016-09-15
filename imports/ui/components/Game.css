@@ -40,3 +40,41 @@ p.player-gulps {
 p.white-text {
   color: #fff;
 }
+
+div.game-info-wrapper {
+  position: absolute;
+  width: 120px;
+  top: 15vh;
+  left: 40vw;
+  margin-left: -60px;
+  text-align: center;
+}
+
+div.dice-wrapper {
+  position: absolute;
+  width: 120px;
+  height: 50px;
+  top: 35vh;
+  margin-top: -25px;
+  left: 40vw;
+  margin-left: -60px;
+}
+
+div.die {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+  font-size: 32px;
+  line-height: 46px;
+  text-align: center;
+  color: #fff;
+}
+
+div.die:last-of-type {
+  margin-left: 15px;
+}
+
+p.player {
+  font-size: 32px;
+}

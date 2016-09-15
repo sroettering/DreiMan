@@ -68,6 +68,7 @@ Meteor.methods({
         gulps: 0,
         isDreiman: false,
       }],
+      gamestate: {},
     }
 
     check(room, RoomsSchema);

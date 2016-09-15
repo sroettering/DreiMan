@@ -12,10 +12,64 @@ const PlayerSchema = new SimpleSchema({
   gulps: {
     type: Number,
     min: 0,
+    autoValue: function() {
+      if(this.isInsert) {
+        return 0;
+      }
+    },
   },
   isDreiman: {
     type: Boolean,
+    autoValue: function() {
+      if(this.isInsert) {
+        return false;
+      }
+    },
   }
+});
+
+const GameSchema = new SimpleSchema({
+  rolling: { // index of current player
+    type: Number,
+    optional: true,
+    autoValue: function() {
+      if(this.isInsert) {
+        return 0;
+      }
+    }
+  },
+  state: {
+    type: String,
+    optional: true,
+    allowedValues: ['gathering', 'dreiman-round', 'drinking-round', 'finished'],
+    autoValue: function() {
+      if(this.isInsert) {
+        return 'gathering';
+      }
+    },
+  },
+  firstDie: {
+    type: Number,
+    optional: true,
+    min: 1,
+    max: 6,
+    autoValue: function() {
+      if(this.isInsert) {
+        return 3;
+      }
+    }
+  },
+  secondDie: {
+    type: Number,
+    optional: true,
+    min: 1,
+    max: 6,
+    autoValue: function() {
+      if(this.isInsert) {
+        return 3;
+      }
+    }
+  },
 });
 
 export const RoomsSchema = new SimpleSchema({
@@ -33,6 +87,9 @@ export const RoomsSchema = new SimpleSchema({
     type: [PlayerSchema],
     minCount: 1,
     maxCount: 10,
+  },
+  gamestate: {
+    type: GameSchema,
   },
   createdAt: {
     type: Date,

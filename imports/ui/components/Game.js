@@ -3,8 +3,20 @@ import './Game.css';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { ReactiveDict } from 'meteor/reactive-dict';
 
 Template.Game.onCreated(function() {
+  let template = Template.instance();
+
+  template.images = [];
+  for(let i = 0; i < 6; i++) {
+    template.images.push('/images/dice/Dice-'+(i+1)+'.svg');
+  }
+
+  template.diceRoll = new ReactiveDict({
+    first: -1,
+    second: -1
+  });
 
 });
 
@@ -47,5 +59,13 @@ Template.Game.helpers({
 });
 
 Template.Game.events({
-
+  'click #roll-button': function(event, template) {
+    const d1 = Math.floor(Math.random() * 6) + 1;
+    const d2 = Math.floor(Math.random() * 6) + 1;
+    template.diceRoll.set({first: d1, second: d2});
+    let die1 = template.find('#die-1');
+    let die2 = template.find('#die-2');
+    die1.src = template.images[d1-1];
+    die2.src = template.images[d2-1];
+  },
 });
