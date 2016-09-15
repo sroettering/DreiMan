@@ -139,6 +139,23 @@ Meteor.methods({
 
     Rooms.update({_id: room._id}, {$addToSet: {players: player }});
   },
+  'startGame'(roomId) {
+    check(roomId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    const room = Rooms.findOne({_id: roomId, admin: this.userId});
+    if(!room) return;
+
+    let gamestate = room.gamestate;
+    gamestate.rolling = 0;
+    gamestate.state = 'dreiman-round';
+    gamestate.firstDie = 3;
+    gamestate.secondDie = 3;
+
+    Meteor.call('removeInvitationsForRoom', roomId);
+
+    Rooms.update({_id: roomId}, {$set: {gamestate: gamestate}});
+  },
   'rollDice'(roomId) {
     check(roomId, String);
     if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');

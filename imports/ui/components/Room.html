@@ -1,11 +1,11 @@
 <template name="Room">
   {{#if room}}
     <h3 class="room-title">{{room.name}} ({{usernameForId room.admin}})</h3>
-    {{#if hasStarted}}
+    {{#unless hasStarted}}
       {{> Lobby room=room}}
     {{else}}
       {{> Game room=room}}
-    {{/if}}
+    {{/unless}}
   {{else}}
     <h3>Hast du dich verlaufen?</h3>
   {{/if}}

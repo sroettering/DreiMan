@@ -115,4 +115,10 @@ Meteor.methods({
 
     Invitations.remove({invitee: this.userId, room: roomId});
   },
+  'removeInvitationsForRoom'(roomId) {
+    check(roomId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    Invitations.remove({sender: this.userId, room: roomId});
+  }
 });

@@ -22,4 +22,9 @@ Template.Room.helpers({
     const id = FlowRouter.getParam('id');
     return Rooms.findOne({_id: id});
   },
+  hasStarted: function() {
+    const id = FlowRouter.getParam('id');
+    const room = Rooms.findOne({_id: id});
+    return room.gamestate.state !== 'gathering';
+  },
 });

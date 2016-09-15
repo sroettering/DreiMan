@@ -60,4 +60,7 @@ Template.Lobby.events({
       template.find('#dummy-name').value = "";
     }
   },
+  'click #startButton': function(event, template) {
+    Meteor.call('startGame', this.room._id);
+  },
 });
