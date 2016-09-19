@@ -12,20 +12,33 @@ const PlayerSchema = new SimpleSchema({
   gulps: {
     type: Number,
     min: 0,
+    optional: true,
     autoValue: function() {
       if(this.isInsert) {
         return 0;
       }
     },
   },
-  isDreiman: {
-    type: Boolean,
+  currentGulps: {
+    type: Number,
+    optional: true,
     autoValue: function() {
       if(this.isInsert) {
-        return false;
+        return 0;
+      }
+    }
+  },
+  dreimanCount: { // number of threes rolled in dreiman-round
+    type: Number,
+    min: 0,
+    max: 2,
+    optional: true,
+    autoValue: function() {
+      if(this.isInsert) {
+        return 0;
       }
     },
-  }
+  },
 });
 
 const GameSchema = new SimpleSchema({
@@ -67,6 +80,17 @@ const GameSchema = new SimpleSchema({
     autoValue: function() {
       if(this.isInsert) {
         return 3;
+      }
+    }
+  },
+  gulpsToDistribute: {
+    type: Number,
+    min: 0,
+    max: 6,
+    optional: true,
+    autoValue: function() {
+      if(this.isInsert) {
+        return 0;
       }
     }
   },

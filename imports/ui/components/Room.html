@@ -1,6 +1,9 @@
 <template name="Room">
   {{#if room}}
     <h3 class="room-title">{{room.name}} ({{usernameForId room.admin}})</h3>
+    {{#if isAdmin room._id currentUser}}
+      <a href="#" class="top-right" id="back-to-lobby"><i class="fa fa-sign-out fa-lg white-text"></i></a>
+    {{/if}}
     {{#unless hasStarted}}
       {{> Lobby room=room}}
     {{else}}

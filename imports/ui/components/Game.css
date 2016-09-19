@@ -17,34 +17,52 @@ div.player-wrapper {
   position: absolute;
   top: 0;
   left: 0;
+  text-align: center;
 }
 
 div.player-circle {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 54px;
+  height: 54px;
   margin: 0 auto;
   background: transparent;
   border: 2px solid white;
-  border-radius: 24px;
-  line-height: 44px;
+  border-radius: 27px;
+  line-height: 48px;
+}
+
+div.clickable-player {
+  border: 2px solid #dd0;
+  cursor: pointer;
 }
 
 p.player-gulps {
   width: 100%;
-  font-size: 24px;
+  font-size: 18px;
   margin: 0 auto;
   text-align: center;
 }
 
-p.white-text {
+span.plus-one {
+  font-size: 18px;
+}
+
+.white-text {
   color: #fff;
+}
+
+.red-text {
+  color: #f00;
+}
+
+.green-text {
+  color: #0f0;
 }
 
 div.game-info-wrapper {
   position: absolute;
   width: 120px;
-  top: 15vh;
+  top: 24vh;
   left: 40vw;
   margin-left: -60px;
   text-align: center;

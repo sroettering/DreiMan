@@ -18,6 +18,19 @@ Template.Game.onCreated(function() {
     second: -1
   });
 
+  template.isMyTurn = function(room) {
+    const userId = Meteor.userId();
+    const admin = room.admin;
+    const players = room.players;
+    const currentPlayer = room.gamestate.rolling;
+    if(players[currentPlayer].userId && players[currentPlayer].userId === userId) {
+      return true;
+    } else if(!players[currentPlayer].userId && admin === userId) {
+      return true;
+    }
+    return false;
+  };
+
 });
 
 Template.Game.onRendered(function() {
@@ -63,10 +76,35 @@ Template.Game.helpers({
     const d2 = this.room.gamestate.secondDie;
     return d2;
   },
+  isDreiman: function() {
+    return this.dreimanCount > 0;
+  },
+  drinksThisRound: function() {
+    return this.currentGulps > 0;
+  },
+  currentPlayerUsername: function() {
+    const currentPlayer = this.room.gamestate.rolling;
+    const players = this.room.players;
+    return players[currentPlayer].username;
+  },
+  isMyTurn: function() {
+    // a player can only roll the dice, if there are no gulps to distribute and if its his turn
+    return this.room.gamestate.gulpsToDistribute <= 0 && Template.instance().isMyTurn(this.room);
+  },
+  needToDistributeGulps: function() {
+    const room = Template.parentData().room;
+    if(Template.instance().isMyTurn(room) === false) return false;
+    if(room.gamestate.state !== 'drinking-round') return false;
+    return room.gamestate.gulpsToDistribute > 0;
+  },
 });
 
 Template.Game.events({
   'click #roll-button': function(event, template) {
     Meteor.call('rollDice', this.room._id);
   },
+  'click .clickable-player': function(event, template) {
+    const playerIndex = event.currentTarget.getAttribute('data-player-index');
+    Meteor.call('giveGulpToPlayer', template.data.room._id, Number(playerIndex));
+  }
 });

@@ -4,10 +4,10 @@
       {{#each $mapped room.players}}
         <div class="player-wrapper" id="player-{{$index}}">
           <div class="crown">
-            <p class="white-text">{{#if isDreiman}}Dreiman{{/if}}</p>
+            <p class="white-text">{{#if isDreiman}}D{{/if}}</p>
           </div>
-          <div class="player-circle">
-            <p class="player-gulps white-text">{{gulps}}</p>
+          <div class="player-circle {{#if needToDistributeGulps}}clickable-player{{/if}}" data-player-index={{$index}}>
+            <p class="player-gulps white-text">{{gulps}}{{#if drinksThisRound}}<span class="plus-one green-text">+{{currentGulps}}</span>{{/if}}</p>
           </div>
           <div class="player-name">
             <p class="white-text">{{username}}</p>
@@ -15,6 +15,8 @@
         </div>
       {{/each}}
       <div class="game-info-wrapper">
+        <p class="white-text">{{room.gamestate.state}}</p>
+        <p class="white-text">{{currentPlayerUsername}} <br> ist dran!</p>
       </div>
       <div class="dice-wrapper">
         <div class="die">
@@ -25,7 +27,9 @@
           <!-- js inserts respective image sources -->
           <img id="die-2" src="/images/dice/Dice-{{die2}}.svg" alt="Würfel-2" />
         </div>
-        <button class="button" id="roll-button">Roll it!</button>
+        {{#if isMyTurn}}
+          <button class="button" id="roll-button">Roll it!</button>
+        {{/if}}
       </div>
     </div>
   </div>

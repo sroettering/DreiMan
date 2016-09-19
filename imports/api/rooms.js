@@ -3,13 +3,12 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import { RoomsSchema } from './rooms_schema.js';
-//import { Inviations } from './invitations.js';
+
+import { Dreiman } from '/imports/api/dreiman_rules.js';
 
 export const Rooms = new Mongo.Collection('rooms');
 
 Rooms.attachSchema(RoomsSchema);
-
-// TODO publish stuff
 
 if(Meteor.isServer){
   // create an index for room names
@@ -101,6 +100,9 @@ Meteor.methods({
     const room = Rooms.findOne({_id: roomId});
     if(!room) return;
 
+    // if game is running, dont allow entries
+    if(room.gamestate.state !== 'gathering') return;
+
     // check if password is correct
     if(room.password !== passwordHash) return;
 
@@ -109,8 +111,6 @@ Meteor.methods({
     const player = {
       userId: this.userId,
       username: user.username,
-      gulps: 0,
-      isDreiman: false,
     }
 
     //only updates, if room is present. addToSet only adds the player if array did not contain it before.
@@ -146,15 +146,25 @@ Meteor.methods({
     const room = Rooms.findOne({_id: roomId, admin: this.userId});
     if(!room) return;
 
+    // reset complete gamestate
     let gamestate = room.gamestate;
     gamestate.rolling = 0;
     gamestate.state = 'dreiman-round';
     gamestate.firstDie = 3;
     gamestate.secondDie = 3;
+    gamestate.gulpsToDistribute = 0;
+
+    // reset gulps
+    let players = room.players;
+    for(let i = 0; i < players.length; i++) {
+      players[i].currentGulps = 0;
+      players[i].gulps = 0;
+      players[i].dreimanCount = 0;
+    }
 
     Meteor.call('removeInvitationsForRoom', roomId);
 
-    Rooms.update({_id: roomId}, {$set: {gamestate: gamestate}});
+    Rooms.update({_id: roomId}, {$set: {gamestate: gamestate, players: players}});
   },
   'rollDice'(roomId) {
     check(roomId, String);
@@ -174,18 +184,97 @@ Meteor.methods({
     // if gamestate is other than dreiman-round or drinking-round no dice roll is allowed
     if(gamestate.state !== 'dreiman-round' && gamestate.state !== 'drinking-round') return;
 
-    let currentPlayer = gamestate.rolling; // TODO: check if player is allowed to roll
+    // if a player did not distribute his gulps from a double prevent the roll
+    if(gamestate.gulpsToDistribute > 0) return;
+
+    let currentPlayer = gamestate.rolling;
+    const userId = room.players[currentPlayer].userId;
+
+    // check if player is allowed to roll
+    if(userId && userId !== this.userId) return;
+    else if(!userId && this.userId !== room.admin) return;
+
     let d1 = Math.floor(Math.random() * 6) + 1;
     let d2 = Math.floor(Math.random() * 6) + 1;
     gamestate.firstDie = d1;
     gamestate.secondDie = d2;
     const sum = d1 + d2;
 
-    // if no player has to drink, it's the next ones turn
-    if((sum === 6 || sum === 8 || sum === 10) && d1 !== 3 && d2 !== 3) {
-      gamestate.rolling = ++currentPlayer % room.players.length;
+    let players = room.players;
+
+    if(gamestate.state === 'dreiman-round') {
+      Dreiman.determineDreiman(d1, d2, currentPlayer, players);
+      gamestate.rolling = ++currentPlayer;
+      if(gamestate.rolling >= players.length) {
+        gamestate.state = 'drinking-round';
+        gamestate.rolling = 0;
+      }
+    } else if(gamestate.state === 'drinking-round') {
+      // add all gulps from last roll to total count and reset the current gulps
+      for(let i = 0; i < players.length; i++) {
+        players[i].gulps = players[i].gulps + players[i].currentGulps;
+        players[i].currentGulps = 0;
+      }
+
+      // apply dreiman rules
+      Dreiman.handleNeighbours(d1, d2, currentPlayer, players);
+      Dreiman.handleDreiman(d1, d2, players);
+
+      // if player rolled a double set the gamestate
+      if(d1 === d2) {
+        gamestate.gulpsToDistribute = d1;
+      }
+
+      // if no player has to drink, it's the next ones turn
+      if((sum === 6 || sum === 8 || sum === 10) && d1 !== 3 && d2 !== 3 && d1 !== d2) {
+        gamestate.rolling = ++currentPlayer
+        if(gamestate.rolling >= players.length) {
+          gamestate.state = 'dreiman-round';
+          gamestate.rolling = 0;
+        }
+      }
     }
-    console.log('You rolled a ' + d1 + ' and a ' + d2);
+
+    Rooms.update({_id: roomId}, {$set: {gamestate: gamestate, players: players}});
+  },
+  'giveGulpToPlayer'(roomId, playerIndex) {
+    check(playerIndex, Number);
+    check(roomId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    const room = Rooms.findOne({_id: roomId, admin: this.userId});
+    if(!room) return;
+
+    // check if there are gulps left and if its drinking round
+    let gamestate = room.gamestate;
+    if(gamestate.gulpsToDistribute <= 0 || gamestate.state !== 'drinking-round') return;
+
+    const currentPlayer = gamestate.rolling;
+    const players = room.players;
+    const userId = players[currentPlayer].userId;
+
+    // check if player is allowed to roll
+    if(userId && userId !== this.userId) return;
+    else if(!userId && this.userId !== room.admin) return;
+
+    let targetPlayer = players[playerIndex];
+    if(!targetPlayer) return;
+
+    players[playerIndex].currentGulps++;
+    gamestate.gulpsToDistribute = Math.max(0, --gamestate.gulpsToDistribute);
+
+    Rooms.update({_id: roomId}, {$set: {players: players, gamestate: gamestate}});
+  },
+  'endGame'(roomId) {
+    check(roomId, String);
+    if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
+
+    const room = Rooms.findOne({_id: roomId, admin: this.userId});
+    if(!room) return;
+
+    // set to gathering to show lobby for all players
+    let gamestate = room.gamestate;
+    gamestate.state = 'gathering';
 
     Rooms.update({_id: roomId}, {$set: {gamestate: gamestate}});
   },

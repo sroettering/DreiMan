@@ -25,6 +25,18 @@ Template.Room.helpers({
   hasStarted: function() {
     const id = FlowRouter.getParam('id');
     const room = Rooms.findOne({_id: id});
-    return room.gamestate.state !== 'gathering';
+    if(room) {
+      return room.gamestate.state !== 'gathering';
+    } else {
+      return false;
+    }
   },
+});
+
+Template.Room.events({
+  'click #back-to-lobby': function(event, template){
+    event.preventDefault();
+    const id = FlowRouter.getParam('id');
+    Meteor.call('endGame', id);
+  }
 });

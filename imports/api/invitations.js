@@ -75,7 +75,7 @@ Meteor.methods({
     if(invitation.invitee !== this.userId) return;
 
     const room = Rooms.findOne({_id: invitation.room});
-    if(room && room.players.length >= 10) return;
+    if(room && (room.players.length >= 10 || room.gamestate.state !== 'gathering')) return;
 
     const user = Meteor.users.findOne({_id: invitation.invitee});
     const player = {
