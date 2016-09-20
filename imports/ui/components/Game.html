@@ -4,7 +4,8 @@
       {{#each $mapped room.players}}
         <div class="player-wrapper" id="player-{{$index}}">
           <div class="crown">
-            <p class="white-text">{{#if isDreiman}}D{{/if}}</p>
+            {{#if isDreiman}}<i class="dreiman"></i>{{/if}}
+            {{#if isDoubleDreiman}}<i class="dreiman"></i><i class="dreiman"></i>{{/if}}
           </div>
           <div class="player-circle {{#if needToDistributeGulps}}clickable-player{{/if}}" data-player-index={{$index}}>
             <p class="player-gulps white-text">{{gulps}}{{#if drinksThisRound}}<span class="plus-one green-text">+{{currentGulps}}</span>{{/if}}</p>

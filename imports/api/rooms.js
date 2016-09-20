@@ -206,7 +206,12 @@ Meteor.methods({
       Dreiman.determineDreiman(d1, d2, currentPlayer, players);
       gamestate.rolling = ++currentPlayer;
       if(gamestate.rolling >= players.length) {
-        gamestate.state = 'drinking-round';
+        for(let i = 0; i < players.length; i++) {
+          if(players[i].dreimanCount > 0) {
+            gamestate.state = 'drinking-round';
+            break;
+          }
+        }
         gamestate.rolling = 0;
       }
     } else if(gamestate.state === 'drinking-round') {

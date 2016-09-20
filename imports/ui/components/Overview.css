@@ -10,7 +10,7 @@ li.room-item, li.invitation-item, li.player-item {
   position: relative;
   list-style: none;
   background-color: #fff;
-  line-height: 40px;
+  line-height: 48px;
   text-align: left;
   border-radius: 2px;
   margin-bottom: 2px;

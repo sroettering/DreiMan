@@ -1,0 +1,28 @@
+div.user-search {
+  position: relative;
+}
+
+ul.user-search-results {
+  position: absolute;
+  display: block;
+  width: 100%;
+  background-color: #fff;
+  z-index: 10;
+  border-radius: 2px;
+}
+
+ul.user-search-results > li {
+  display: block;
+  height: 48px;
+  line-height: 48px;
+  padding-left: 10px;
+}
+
+ul.user-search-results > li.user-item-clickable:hover {
+  background-color: #0b8793;
+  color: #fff;
+}
+
+ul.players-list {
+  margin-bottom: 10px;
+}

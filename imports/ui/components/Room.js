@@ -38,5 +38,9 @@ Template.Room.events({
     event.preventDefault();
     const id = FlowRouter.getParam('id');
     Meteor.call('endGame', id);
+  },
+  'click #back-to-overview': function(event, template) {
+    event.preventDefault();
+    FlowRouter.go('overview');
   }
 });

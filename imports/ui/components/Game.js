@@ -49,7 +49,7 @@ Template.Game.onRendered(function() {
     const tableWidth = template.find('.table').offsetWidth / 2;
     const tableHeight = template.find('.table').offsetHeight / 2;
     const radiusX = tableWidth - 20;
-    const radiusY = tableHeight - 20;
+    const radiusY = tableHeight - 30;
     let angle = 0;
             x = 0,
             y = 0;
@@ -77,7 +77,10 @@ Template.Game.helpers({
     return d2;
   },
   isDreiman: function() {
-    return this.dreimanCount > 0;
+    return this.dreimanCount === 1;
+  },
+  isDoubleDreiman: function() {
+    return this.dreimanCount === 2;
   },
   drinksThisRound: function() {
     return this.currentGulps > 0;

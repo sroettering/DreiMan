@@ -96,3 +96,12 @@ div.die:last-of-type {
 p.player {
   font-size: 32px;
 }
+
+i.dreiman {
+  display: inline-block;
+  margin: 0 auto;
+  color: #fff;
+  background: url("/Icons/dreiman.svg");
+  width: 30px;
+  height: 30px;
+}

@@ -3,15 +3,24 @@
   <div id="headline">
     Durstige finden
   </div>
-  <input type="text" name="invitee-name" class="input" id="invitee-name" value="" placeholder="Email, Benutzername, etc.">
-  <button id="inviteButton" class="button" {{maximumReached}}>Einladen</button>
-  <br>
+  <div class="user-search">
+    <input type="text" name="invitee-name" class="input" id="invitee-name" value="" placeholder="Email, Benutzername, etc.">
+    <ul class="user-search-results">
+      {{#each userSearchResults}}
+        <li class="user-item user-item-clickable">{{username}}</li>
+      {{else}}
+        {{#if searching}}
+          <li class="user-item">Vertippt? Schon voll?</li>
+        {{/if}}
+      {{/each}}
+    </ul>
+    <button id="inviteButton" class="button" {{maximumReached}}>Einladen</button>
+  </div>
   <div id="headline">
     Jemand kein Handy?
   </div>
   <input type="text" class="input" id="dummy-name" placeholder="Name">
   <button id="add-dummy-player" class="button" {{maximumReached}}>Hinzufügen</button>
-  <br>
   <div id="headline">
     Einladungen: {{getLength invitations}}
   </div>
@@ -27,7 +36,6 @@
       </li>
     {{/each}}
   </ul>
-  <br>
   {{/if}}
   <div id="headline">
     Spieler: {{getLength room.players}}
@@ -43,7 +51,6 @@
       </li>
     {{/each}}
   </ul>
-  <br>
   {{#if isAdmin room._id currentUser}}
     <button id="startButton" class="button">Durst löschen!</button>
   {{/if}}

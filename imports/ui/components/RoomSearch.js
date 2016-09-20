@@ -38,6 +38,7 @@ Template.RoomSearch.helpers({
     const searchQuery = Template.instance().searchQuery.get();
     const projection = {sort: {createdAt: 1, name: 1}};
 
+    // filter rooms for the search query on client, too, because we subscribed to other rooms, too.
     if(searchQuery) {
       const regex = new RegExp(searchQuery, 'i');
       const query = {name: regex, "players.userId": {$ne: Meteor.userId()}};

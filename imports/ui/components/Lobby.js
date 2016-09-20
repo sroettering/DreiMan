@@ -8,13 +8,10 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Rooms } from '/imports/api/rooms.js';
 import { Invitations } from '/imports/api/invitations.js';
 
-/*
-TODO:
-- allow only invited users into the lobby (maybe with template level subscriptions)
-*/
-
 Template.Lobby.onCreated( () => {
   let template = Template.instance();
+
+  template.searchQuery = new ReactiveVar();
 
   template.autorun( () => {
     // subscribe to my rooms
@@ -22,6 +19,9 @@ Template.Lobby.onCreated( () => {
 
     // subscribe to my sent invitations
     template.subscribe('room-invitations', FlowRouter.getParam('id'));
+
+    // subscribe to user search results
+    template.subscribe('user-search-results', template.searchQuery.get());
   });
 });
 
@@ -39,6 +39,22 @@ Template.Lobby.helpers({
     if(players) {
       if(players.length >= 10) return {disabled: 'disabled'};
     }
+  },
+  userSearchResults: function() {
+    const searchQuery = Template.instance().searchQuery.get();
+    check(searchQuery, Match.OneOf(String, null, undefined));
+
+    const projection = {fields: {username: 1, _id: 1}, limit: 5};
+
+    if(searchQuery) {
+      const regex = new RegExp(searchQuery, 'i');
+      const query = {username: regex};
+      return Meteor.users.find(query, projection);
+    }
+  },
+  searching: function() {
+    const query = Template.instance().searchQuery.get();
+    return query && query !== '';
   },
 });
 
@@ -62,5 +78,13 @@ Template.Lobby.events({
   },
   'click #startButton': function(event, template) {
     Meteor.call('startGame', this.room._id);
+  },
+  'keyup #invitee-name': function(event, template ) {
+    let value = event.target.value.trim();
+    template.searchQuery.set(value);
+  },
+  'click .user-item-clickable': function(event, template) {
+    template.searchQuery.set('');
+    template.find('#invitee-name').value = this.username;
   },
 });
