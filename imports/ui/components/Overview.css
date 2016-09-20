@@ -45,3 +45,13 @@ i.white {
 p.no-data-msg {
   color: #aaa;
 }
+
+button#toggleRoomCreation {
+  display: inline-block;
+  width: 80%;
+}
+
+button.icon-button {
+  width: 48px;
+  float: right;
+}

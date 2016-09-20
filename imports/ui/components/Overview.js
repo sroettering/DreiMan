@@ -16,6 +16,8 @@ import { ReactiveVar } from 'meteor/reactive-var';
 Template.Overview.onCreated( () => {
   let template = Template.instance();
 
+  template.formState = new ReactiveVar('collapsed');
+
   template.autorun( () => {
     // subscribe to my invitations
     template.subscribe('myInvitations');
@@ -54,6 +56,14 @@ Template.Overview.helpers({
     const date = moment(this.createdAt).format("D.M.YY"); // - HH:mm");
     return date;
   },
+  showRoomCreation: function() {
+    const template = Template.instance();
+    return template.formState.get() === 'roomCreation';
+  },
+  showRoomSearch: function() {
+    const template = Template.instance();
+    return template.formState.get() === 'roomSearch';
+  },
 });
 
 Template.Overview.events({
@@ -88,5 +98,11 @@ Template.Overview.events({
   'click .declineRoomInvitation': function(event, template) {
     event.preventDefault();
     Meteor.call('declineRoomInvitation', this._id);
+  },
+  'click #toggleRoomCreation': function(event, template) {
+    template.formState.set('roomCreation');
+  },
+  'click #toggleRoomSearch': function(event, template) {
+    template.formState.set('roomSearch');
   },
 });

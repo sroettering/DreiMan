@@ -5,9 +5,7 @@
   <input type="text" class="input" id="room-search-name" maxlength="15" placeholder="Saufrunde suchen">
   <ul class="search-result-list">
     {{#if searching}}
-      <p>
-        Searching...
-      </p>
+      {{> Spinner}}
     {{else}}
       {{#each roomSearchResults}}
         <li class="room-item room-item-clickable">

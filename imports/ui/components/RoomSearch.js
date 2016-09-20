@@ -1,13 +1,14 @@
 import './RoomSearch.html';
 import './RoomSearch.css';
 
+import './RoomEntryModal.js';
+import './Spinner.js';
+
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Rooms } from '/imports/api/rooms.js';
-
-import './RoomEntryModal.js';
 
 Template.RoomSearch.onCreated( () => {
   Session.set('showRoomEntryModal', false);
