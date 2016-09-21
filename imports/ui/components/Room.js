@@ -25,7 +25,7 @@ Template.Room.helpers({
   hasStarted: function() {
     const id = FlowRouter.getParam('id');
     const room = Rooms.findOne({_id: id});
-    if(room) {
+    if(room && room.gamestate) {
       return room.gamestate.state !== 'gathering';
     } else {
       return false;

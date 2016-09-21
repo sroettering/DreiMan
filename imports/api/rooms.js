@@ -65,8 +65,6 @@ Meteor.methods({
       players: [{
         userId: this.userId,
         username: user.username,
-        gulps: 0,
-        isDreiman: false,
       }],
       gamestate: {},
     }
@@ -133,8 +131,6 @@ Meteor.methods({
     const player = {
       //userId: 00000, // dummy players dont have a userid
       username: playerName,
-      gulps: 0,
-      isDreiman: false,
     };
 
     Rooms.update({_id: room._id}, {$addToSet: {players: player }});

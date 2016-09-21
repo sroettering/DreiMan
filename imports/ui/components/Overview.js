@@ -5,6 +5,7 @@ import './RoomSearch.js';
 
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 import { moment } from 'meteor/momentjs:moment';
 import { CryptoJS } from 'meteor/jparker:crypto-core';
 import { FlowRouter } from 'meteor/kadira:flow-router';

@@ -29,6 +29,12 @@ div.player-circle {
   border: 2px solid white;
   border-radius: 27px;
   line-height: 48px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 div.clickable-player {
