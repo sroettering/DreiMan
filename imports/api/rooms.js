@@ -232,6 +232,9 @@ Meteor.methods({
         if(gamestate.rolling >= players.length) {
           gamestate.state = 'dreiman-round';
           gamestate.rolling = 0;
+          for(let i = 0; i < players.length; i++) {
+            players[i].dreimanCount = 0;
+          }
         }
       }
     }
