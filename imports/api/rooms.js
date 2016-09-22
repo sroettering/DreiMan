@@ -87,6 +87,7 @@ Meteor.methods({
     if(room.admin === this.userId) {
       Rooms.remove({_id: roomId});
     } else {
+      // TODO check if it was players turn and give it to the next player
       Rooms.update({_id: roomId}, {$pull: {"players": {userId: this.userId}}});
     }
   },

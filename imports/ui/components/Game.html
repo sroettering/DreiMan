@@ -7,7 +7,7 @@
             {{#if isDreiman}}<i class="dreiman"></i>{{/if}}
             {{#if isDoubleDreiman}}<i class="dreiman"></i><i class="dreiman"></i>{{/if}}
           </div>
-          <div class="player-circle {{#if needToDistributeGulps}}clickable-player{{/if}}" data-player-index={{$index}} unselectable="on">
+          <div class="player-circle {{#if playersTurn $index}}rolling{{/if}} {{#if needToDistributeGulps}}clickable-player{{/if}}" data-player-index={{$index}} unselectable="on">
             <p class="player-gulps white-text">{{gulps}}{{#if drinksThisRound}}<span class="plus-one green-text">+{{currentGulps}}</span>{{/if}}</p>
           </div>
           <div class="player-name">
@@ -15,10 +15,8 @@
           </div>
         </div>
       {{/each}}
-      <div class="game-info-wrapper">
-        <p class="white-text">{{gameState}} <br> {{currentPlayerUsername}} <br> ist dran!</p>
-      </div>
       <div class="dice-wrapper">
+        <p class="white-text">{{gameState}}</p>
         <div class="die">
           <!-- js inserts respective image sources -->
           <img id="die-1" src="/images/dice/Dice-{{die1}}.svg" alt="Würfel-1" />

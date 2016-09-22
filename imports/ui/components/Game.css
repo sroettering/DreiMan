@@ -37,8 +37,12 @@ div.player-circle {
   user-select: none;
 }
 
+div.player-circle.rolling {
+  border: 2px solid #0f0;
+}
+
 div.clickable-player {
-  border: 2px solid #dd0;
+  border: 2px solid #aa0;
   cursor: pointer;
 }
 
@@ -71,23 +75,18 @@ span.plus-one {
   color: #0f0;
 }
 
-div.game-info-wrapper {
-  position: absolute;
-  width: 120px;
-  top: 22vh;
-  left: 40vw;
-  margin-left: -60px;
-  text-align: center;
-}
-
 div.dice-wrapper {
   position: absolute;
   width: 120px;
   height: 50px;
-  top: 35vh;
+  top: 34vh;
   margin-top: -25px;
   left: 40vw;
   margin-left: -60px;
+}
+
+div.dice-wrapper > p {
+  text-align: center;
 }
 
 div.die {

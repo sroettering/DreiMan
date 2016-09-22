@@ -93,10 +93,9 @@ Template.Game.helpers({
       return 'Trink Runde';
     }
   },
-  currentPlayerUsername: function() {
-    const currentPlayer = this.room.gamestate.rolling;
-    const players = this.room.players;
-    return players[currentPlayer].username;
+  playersTurn: function(index) {
+    const room = Template.parentData().room;
+    return room.gamestate.rolling === index;
   },
   isMyTurn: function() {
     // a player can only roll the dice, if there are no gulps to distribute and if its his turn
