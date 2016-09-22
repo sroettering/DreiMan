@@ -99,7 +99,7 @@ Meteor.methods({
     if(!room) return;
 
     // if game is running, dont allow entries
-    if(room.gamestate.state !== 'gathering') return;
+    if(room.gamestate && room.gamestate.state !== 'gathering') return;
 
     // check if password is correct
     if(room.password !== passwordHash) return;
@@ -246,7 +246,12 @@ Meteor.methods({
     check(roomId, String);
     if(!this.userId) throw new Meteor.Error('Sorry! Du bist nicht eingeloggt.');
 
-    const room = Rooms.findOne({_id: roomId, admin: this.userId});
+    const room = Rooms.findOne({_id: roomId,
+      $or: [
+        {"players.userId": this.userId}, // logged in user or
+        {admin: this.userId} // dummy player
+      ]
+    });
     if(!room) return;
 
     // check if there are gulps left and if its drinking round

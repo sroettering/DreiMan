@@ -47,6 +47,12 @@ p.player-gulps {
   font-size: 18px;
   margin: 0 auto;
   text-align: center;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 span.plus-one {
@@ -68,7 +74,7 @@ span.plus-one {
 div.game-info-wrapper {
   position: absolute;
   width: 120px;
-  top: 24vh;
+  top: 22vh;
   left: 40vw;
   margin-left: -60px;
   text-align: center;

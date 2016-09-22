@@ -85,6 +85,14 @@ Template.Game.helpers({
   drinksThisRound: function() {
     return this.currentGulps > 0;
   },
+  gameState: function() {
+    const room = this.room;
+    if(room.gamestate.state === 'dreiman-round') {
+      return 'Dreiman Runde';
+    } else if(room.gamestate.state === 'drinking-round') {
+      return 'Trink Runde';
+    }
+  },
   currentPlayerUsername: function() {
     const currentPlayer = this.room.gamestate.rolling;
     const players = this.room.players;
